@@ -1,25 +1,51 @@
-# 🎈 Blank app template
+# 🩺 基礎看護技術 手順確認アプリ
 
-A simple Streamlit app template for you to modify!
+基礎看護技術の手順・必要物品・根拠（留意点）をブラウザ上で手軽に確認できる、Streamlit製の学習・演習サポートアプリです。
 
-[![Open in Streamlit](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://blank-app-template.streamlit.app/)
+## 主な機能
 
-### How to run it on your own machine
+* **重要ポイントのマーカー表示**：手技の中で特に注意すべき箇所を薄い黄色マーカー（蛍光ペン風）で強調表示します。
+* **キーワード検索＆カテゴリー絞り込み**：手技名だけでなく、目的・手順・根拠に含まれるキーワード（例：「逆血」「クラーク」「心臓」など）やカテゴリーから該当する技術を素早く検索できます。
+* **演習用チェックリスト**：各ステップにチェックボックスを備えており、手技の確認や演習時の進捗チェックに活用できます。
+* **コード内データ管理**：外部データベース不要で、`app.py` 内のリスト（`NURSING_PROCEDURES`）を編集するだけで簡単に手技を追加・修正できます。
 
-Prerequisite: install `uv` if you don't already have it.
+## 収録されている基礎看護技術（サンプル）
 
+1. **【感染予防】** 衛生的手洗い（流水と石けん）
+2. **【バイタルサイン】** 血圧測定（上腕・聴診法）
+3. **【無菌操作】** 滅菌手袋の装着（オープン法）
+4. **【与薬技術】** 筋肉内注射（中殿筋部位）
+5. **【活動・休息援助】** 仰臥位から側臥位への体位変換
+
+## ローカル環境での実行方法
+
+以下のコマンドでアプリを起動します。
+
+```bash
+streamlit run app.py
 ```
-$ curl -LsSf https://astral.sh/uv/install.sh | sh
+
+## 手技データの追加・編集方法
+
+`app.py` 内の `NURSING_PROCEDURES` リストに、以下の形式で辞書データを追加してください。文章中で黄色マーカーを引きたい箇所は `<span class='marker'>〜</span>` で囲みます。
+
+```python
+{
+    "id": "unique_id",
+    "category": "カテゴリー名",
+    "title": "看護技術のタイトル",
+    "purpose": "手技の目的",
+    "items": ["必要物品1", "必要物品2"],
+    "steps": [
+        {
+            "step": "1. ステップ名",
+            "action": "具体的な手順（<span class='marker'>重要なポイント</span>を強調）",
+            "rationale": "根拠・留意点",
+        },
+    ],
+}
 ```
 
-1. Sync the dependencies
+## 免責事項
 
-   ```
-   $ uv sync
-   ```
-
-2. Run the app
-
-   ```
-   $ uv run streamlit run streamlit_app.py
-   ```
+本アプリに収録されているサンプル手順は、一般的な基礎看護教育の標準的な内容をもとに作成したものです。実際の臨地実習や臨床現場においては、各施設・教育機関の最新プロトコルおよび指導者の指示に従ってください。

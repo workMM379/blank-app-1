@@ -1,3 +1,5 @@
+import json
+import pandas as pd
 import streamlit as st
 
 # ---------------------------------------------------------
@@ -10,7 +12,7 @@ st.set_page_config(
 )
 
 # ---------------------------------------------------------
-# 2. 基礎看護技術データ（全9手技収録）
+# 2. 基礎看護技術データ（全13手技収録）
 #    重要箇所は <span class='marker'>〜</span> で囲みます
 # ---------------------------------------------------------
 NURSING_PROCEDURES = [
@@ -336,7 +338,8 @@ NURSING_PROCEDURES = [
                 "rationale": "皮膚のバリア機能を維持し、皮膚トラブルや褥瘡を予防するため。",
             },
         ],
-    },{
+    },
+    {
         "id": "suctioning",
         "category": "呼吸・循環援助",
         "title": "口腔・鼻腔内吸引（一時的吸引）",
@@ -486,10 +489,57 @@ NURSING_PROCEDURES = [
 ]
 
 # ---------------------------------------------------------
-# 3. サイドバー：暗記モード・検索機能・手技選択
+# 3. 永続化処理（URLパラメータによる自動保存・復元）
+# ---------------------------------------------------------
+PROCEDURE_IDS = [p["id"] for p in NURSING_PROCEDURES]
+
+
+def load_counts_from_url() -> dict:
+    """URLのクエリパラメータ（?c=id1:2,id2:1）から確認回数を復元する"""
+    counts = {pid: 0 for pid in PROCEDURE_IDS}
+    raw = st.query_params.get("c", "")
+    if raw:
+        for pair in raw.split(","):
+            if ":" in pair:
+                pid, val = pair.split(":", 1)
+                if pid in counts and val.isdigit():
+                    counts[pid] = int(val)
+    return counts
+
+
+def sync_counts_to_url(counts: dict):
+    """0回より多い手技の回数をURLパラメータへ書き戻して永続化する"""
+    pairs = [f"{pid}:{cnt}" for pid, cnt in counts.items() if cnt > 0]
+    if pairs:
+        st.query_params["c"] = ",".join(pairs)
+    elif "c" in st.query_params:
+        del st.query_params["c"]
+
+
+if "review_counts" not in st.session_state:
+    st.session_state.review_counts = load_counts_from_url()
+
+for pid in PROCEDURE_IDS:
+    if pid not in st.session_state.review_counts:
+        st.session_state.review_counts[pid] = 0
+
+# ---------------------------------------------------------
+# 4. サイドバー：学習進捗・暗記モード・検索機能・データ管理
 # ---------------------------------------------------------
 st.sidebar.title("🩺 基礎看護技術ナビ")
 st.sidebar.caption("手順・根拠・重要ポイントの確認用ツール")
+
+# 全体の学習進捗表示
+total_procs = len(NURSING_PROCEDURES)
+reviewed_procs = sum(1 for count in st.session_state.review_counts.values() if count > 0)
+total_reviews = sum(st.session_state.review_counts.values())
+
+st.sidebar.metric(
+    label="📊 確認済み手技数（累計確認回数）",
+    value=f"{reviewed_procs} / {total_procs} 手技",
+    delta=f"合計 {total_reviews} 回確認",
+    delta_color="off",
+)
 
 # 暗記モードの切り替えトグル
 memorize_mode = st.sidebar.toggle(
@@ -503,7 +553,7 @@ st.sidebar.markdown("---")
 # キーワード検索ボックス
 search_query = st.sidebar.text_input(
     "🔍 キーワード検索",
-    placeholder="例：逆血、クラーク、蛇口、心臓...",
+    placeholder="例：逆血、クラーク、吸引圧...",
     help="手技名、目的、手順、根拠の中の言葉を検索できます。",
 )
 
@@ -512,7 +562,7 @@ categories = ["すべて"] + sorted(list({p["category"] for p in NURSING_PROCEDU
 selected_category = st.sidebar.selectbox("📂 カテゴリーで絞り込み", categories)
 
 # ---------------------------------------------------------
-# 4. カスタムCSS（通常モード／暗記モードのスタイル切り替え）
+# 5. カスタムCSS（通常モード／暗記モードのスタイル切り替え）
 # ---------------------------------------------------------
 if memorize_mode:
     marker_css = """
@@ -554,13 +604,23 @@ st.markdown(
         border-radius: 0 6px 6px 0;
         font-size: 0.92rem;
     }}
+    .count-badge {{
+        display: inline-block;
+        background-color: #e3f2fd;
+        color: #0d47a1;
+        font-weight: 700;
+        padding: 4px 12px;
+        border-radius: 16px;
+        font-size: 0.95rem;
+        border: 1px solid #90caf9;
+    }}
     </style>
     """,
     unsafe_allow_html=True,
 )
 
 # ---------------------------------------------------------
-# 5. 検索フィルタリングとメイン画面の表示
+# 6. 検索フィルタリング（サイドバー手技リスト）
 # ---------------------------------------------------------
 filtered_procedures = []
 for proc in NURSING_PROCEDURES:
@@ -589,53 +649,153 @@ for proc in NURSING_PROCEDURES:
 
     filtered_procedures.append(proc)
 
-if not filtered_procedures:
-    st.warning(f"「{search_query}」に一致する看護技術が見つかりませんでした。別のキーワードでお試しください。")
-else:
-    procedure_titles = [f"【{p['category']}】{p['title']}" for p in filtered_procedures]
+selected_index = 0
+if filtered_procedures:
+    procedure_titles = [
+        f"【{p['category']}】{p['title']}（確認: {st.session_state.review_counts[p['id']]}回）"
+        for p in filtered_procedures
+    ]
     selected_index = st.sidebar.radio(
         f"📋 該当する技術（{len(filtered_procedures)}件）",
         range(len(procedure_titles)),
         format_func=lambda i: procedure_titles[i],
     )
 
-    current_proc = filtered_procedures[selected_index]
+# サイドバー下部：学習記録の保存ガイドとバックアップ機能
+st.sidebar.markdown("---")
+with st.sidebar.expander("💾 確認回数の保存・バックアップ"):
+    st.caption(
+        "確認回数はブラウザのURLに自動保存されます。このページをブックマークすると、ブラウザを閉じた後も続きから学習できます。"
+    )
+    backup_json = json.dumps(st.session_state.review_counts, ensure_ascii=False, indent=2)
+    st.download_button(
+        label="📥 記録をJSONで保存",
+        data=backup_json,
+        file_name="nursing_review_counts.json",
+        mime="application/json",
+        use_container_width=True,
+    )
+    uploaded_file = st.file_uploader("📤 JSONから復元", type=["json"])
+    if uploaded_file is not None:
+        try:
+            loaded_data = json.load(uploaded_file)
+            if isinstance(loaded_data, dict):
+                for pid in PROCEDURE_IDS:
+                    if pid in loaded_data and isinstance(loaded_data[pid], int):
+                        st.session_state.review_counts[pid] = max(0, loaded_data[pid])
+                sync_counts_to_url(st.session_state.review_counts)
+                st.success("記録を復元しました！")
+                st.rerun()
+        except Exception:
+            st.error("ファイルの読み込みに失敗しました。")
 
-    # ヘッダー情報
-    st.caption(f"カテゴリー：{current_proc['category']}")
-    st.title(current_proc["title"])
+# ---------------------------------------------------------
+# 7. メイン画面（タブ切り替え：手順の確認 ／ 確認回数グラフ）
+# ---------------------------------------------------------
+tab_procedure, tab_chart = st.tabs(["📖 手順の確認", "📊 確認回数グラフ"])
 
-    # モード・検索状態のガイド表示
-    if memorize_mode:
-        st.warning("🙈 **暗記モード中**：黄色く隠された部分にカーソルを合わせる（スマホはタップする）と答えが表示されます。")
-    if search_query.strip():
-        st.info(f"🔍 検索キーワード：「**{search_query.strip()}**」で絞り込み中")
+# === タブ1：手順の確認 ===
+with tab_procedure:
+    if not filtered_procedures:
+        st.warning(f"「{search_query}」に一致する看護技術が見つかりませんでした。別のキーワードでお試しください。")
+    else:
+        current_proc = filtered_procedures[selected_index]
+        proc_id = current_proc["id"]
+        current_count = st.session_state.review_counts[proc_id]
 
-    # 目的と必要物品
-    col1, col2 = st.columns([3, 2])
-    with col1:
-        st.subheader("🎯 目的")
-        st.write(current_proc["purpose"])
-    with col2:
-        st.subheader("🧰 必要物品")
-        st.write("・" + " ・".join(current_proc["items"]))
+        st.caption(f"カテゴリー：{current_proc['category']}")
+        st.title(current_proc["title"])
 
-    st.markdown("---")
-    st.subheader("📝 手順と重要ポイント")
-    st.caption("※ チェックボックスは演習時の進捗確認にお使いいただけます。")
-
-    # 手順リストの表示
-    for idx, step_data in enumerate(current_proc["steps"]):
-        col_chk, col_body = st.columns([0.05, 0.95])
-        with col_chk:
-            st.checkbox("", key=f"{current_proc['id']}_step_{idx}")
-        with col_body:
-            st.markdown(f"**{step_data['step']}**")
-            st.markdown(step_data["action"], unsafe_allow_html=True)
+        # 確認回数の表示とカウント操作ボタン
+        col_badge, col_add, col_reset, _ = st.columns([2.2, 2.2, 1.5, 3.1])
+        with col_badge:
             st.markdown(
-                f"<div class='point-box'>💡 <strong>根拠・留意点：</strong>{step_data['rationale']}</div>",
+                f"<div class='count-badge'>👀 確認回数：{current_count} 回</div>",
                 unsafe_allow_html=True,
             )
+        with col_add:
+            if st.button("✅ 確認完了（+1回）", key=f"add_{proc_id}", use_container_width=True):
+                st.session_state.review_counts[proc_id] += 1
+                sync_counts_to_url(st.session_state.review_counts)
+                st.rerun()
+        with col_reset:
+            if st.button("🔄 0回に戻す", key=f"reset_{proc_id}", use_container_width=True):
+                st.session_state.review_counts[proc_id] = 0
+                sync_counts_to_url(st.session_state.review_counts)
+                st.rerun()
+
+        st.write("")
+
+        if memorize_mode:
+            st.warning("🙈 **暗記モード中**：黄色く隠された部分にカーソルを合わせる（スマホはタップする）と答えが表示されます。")
+        if search_query.strip():
+            st.info(f"🔍 検索キーワード：「**{search_query.strip()}**」で絞り込み中")
+
+        col1, col2 = st.columns([3, 2])
+        with col1:
+            st.subheader("🎯 目的")
+            st.write(current_proc["purpose"])
+        with col2:
+            st.subheader("🧰 必要物品")
+            st.write("・" + " ・".join(current_proc["items"]))
+
+        st.markdown("---")
+        st.subheader("📝 手順と重要ポイント")
+        st.caption("※ チェックボックスは演習時の進捗確認にお使いいただけます。確認し終えたら上部の「✅ 確認完了（+1回）」を押してください。")
+
+        for idx, step_data in enumerate(current_proc["steps"]):
+            col_chk, col_body = st.columns([0.05, 0.95])
+            with col_chk:
+                st.checkbox("", key=f"{proc_id}_step_{idx}")
+            with col_body:
+                st.markdown(f"**{step_data['step']}**")
+                st.markdown(step_data["action"], unsafe_allow_html=True)
+                st.markdown(
+                    f"<div class='point-box'>💡 <strong>根拠・留意点：</strong>{step_data['rationale']}</div>",
+                    unsafe_allow_html=True,
+                )
+
+# === タブ2：確認回数グラフ ===
+with tab_chart:
+    st.title("📊 基礎看護技術 確認回数グラフ")
+    st.caption("どの技術を何回確認したかを一覧で比較できます。確認回数が0回の技術を優先して復習しましょう。")
+
+    # サマリー指標
+    m1, m2, m3 = st.columns(3)
+    m1.metric("確認済みの技術", f"{reviewed_procs} / {total_procs} 手技")
+    m2.metric("累計確認回数", f"{total_reviews} 回")
+    unreviewed_count = total_procs - reviewed_procs
+    m3.metric("未確認の技術", f"{unreviewed_count} 手技")
 
     st.markdown("---")
-    st.caption("※ 本アプリの記載内容は一般的な基礎看護教育の標準手順をもとに作成したサンプルです。実際の臨地実習や臨床現場では、各施設・教育機関の最新プロトコルに従ってください。")
+
+    # データフレーム作成（手技ごとの確認回数）
+    chart_records = []
+    for p in NURSING_PROCEDURES:
+        chart_records.append(
+            {
+                "カテゴリー": p["category"],
+                "手技名": p["title"],
+                "確認回数": st.session_state.review_counts[p["id"]],
+            }
+        )
+    df_chart = pd.DataFrame(chart_records)
+
+    st.subheader("📋 手技別の確認回数")
+    # 横棒グラフで手技名が読みやすいように表示
+    st.bar_chart(
+        df_chart.set_index("手技名")["確認回数"],
+        horizontal=True,
+        color="#fbc02d",
+    )
+
+    st.markdown("---")
+    st.subheader("📂 カテゴリー別の合計確認回数")
+    df_cat = df_chart.groupby("カテゴリー", as_index=True)["確認回数"].sum()
+    st.bar_chart(df_cat, horizontal=True, color="#42a5f5")
+
+    with st.expander("🔢 数値一覧テーブルを表示"):
+        st.dataframe(df_chart, use_container_width=True, hide_index=True)
+
+st.markdown("---")
+st.caption("※ 本アプリの記載内容は一般的な基礎看護教育の標準手順をもとに作成したサンプルです。実際の臨地実習や臨床現場では、各施設・教育機関の最新プロトコルに従ってください。")

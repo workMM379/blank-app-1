@@ -13,13 +13,16 @@ st.set_page_config(
 
 # ---------------------------------------------------------
 # 2. 基礎看護技術データ（全13手技収録）
-#    重要箇所は <span class='marker'>〜</span> で囲みます
+#    - category_reading / reading で「あいうえお順」に整列します
+#    - 重要箇所は <span class='marker'>〜</span> で囲みます
 # ---------------------------------------------------------
-NURSING_PROCEDURES = [
+RAW_NURSING_PROCEDURES = [
     {
         "id": "hand_hygiene",
         "category": "感染予防",
+        "category_reading": "かんせんよぼう",
         "title": "衛生的手洗い（流水と石けん）",
+        "reading": "えいせいてきてあらい",
         "purpose": "手指に付着した通過菌や汚染物を物理的・化学的に除去し、交差感染を防止する。",
         "items": ["液体石けん", "ペーパータオル", "流水設備"],
         "steps": [
@@ -53,7 +56,9 @@ NURSING_PROCEDURES = [
     {
         "id": "blood_pressure",
         "category": "バイタルサイン",
+        "category_reading": "ばいたるさいん",
         "title": "血圧測定（上腕・聴診法）",
+        "reading": "けつあつそくてい",
         "purpose": "循環動態を把握し、異常の早期発見や治療・ケアの評価を行う。",
         "items": ["水銀柱またはアネロイド血圧計", "聴診器", "アルコール綿"],
         "steps": [
@@ -87,7 +92,9 @@ NURSING_PROCEDURES = [
     {
         "id": "sterile_gloves",
         "category": "無菌操作",
+        "category_reading": "むきんそうさ",
         "title": "滅菌手袋の装着（オープン法）",
+        "reading": "めっきんてぶくろのそうちゃく",
         "purpose": "無菌操作が必要な処置において、術者の手指からの微生物伝播を防ぎ清潔野を維持する。",
         "items": ["滅菌手袋（適切なサイズ）", "消毒用アルコール（事前手指衛生用）"],
         "steps": [
@@ -116,7 +123,9 @@ NURSING_PROCEDURES = [
     {
         "id": "im_injection",
         "category": "与薬技術",
+        "category_reading": "よやくぎじゅつ",
         "title": "筋肉内注射（中殿筋部位）",
+        "reading": "きんにくないちゅうしゃ",
         "purpose": "皮下組織より血流が豊富な筋層に薬液を注入し、確実かつ速やかな吸収を図る。",
         "items": ["薬液を吸った注射器", "注射針（21〜23G）", "アルコール綿", "未滅菌手袋", "針捨てボックス"],
         "steps": [
@@ -150,7 +159,9 @@ NURSING_PROCEDURES = [
     {
         "id": "transfer_position",
         "category": "活動・休息援助",
+        "category_reading": "かつどうきゅうそくえんじょ",
         "title": "仰臥位から側臥位への体位変換",
+        "reading": "ぎょうがいからそくがいへのたいいへんかん",
         "purpose": "同一部位への圧迫を解除して褥瘡を予防し、安楽な姿勢保持や排痰・ケアを助ける。",
         "items": ["体位変換用クッション（2〜3個）", "バスタオル"],
         "steps": [
@@ -179,7 +190,9 @@ NURSING_PROCEDURES = [
     {
         "id": "venipuncture",
         "category": "診療の補助",
+        "category_reading": "しんりょうのほじょ",
         "title": "静脈血採血（真空採血管ホルダー法）",
+        "reading": "じょうみゃくけつさいけつ",
         "purpose": "検査に必要な静脈血を安全・確実に採取し、溶血や神経損傷などの合併症を防止する。",
         "items": [
             "真空採血管ホルダー",
@@ -222,7 +235,9 @@ NURSING_PROCEDURES = [
     {
         "id": "urinary_catheterization",
         "category": "排泄援助",
+        "category_reading": "はいせつえんじょ",
         "title": "一時的導尿（女性患者）",
+        "reading": "いちじてきどうにょう",
         "purpose": "尿閉の解除や無菌的な検査尿の採取のため、尿道口から膀胱へカテーテルを挿入して排尿させる。",
         "items": [
             "滅菌ネラトンカテーテル（12〜14Fr）",
@@ -264,7 +279,9 @@ NURSING_PROCEDURES = [
     {
         "id": "tube_feeding",
         "category": "栄養援助",
+        "category_reading": "えいようえんじょ",
         "title": "経鼻胃管からの経管栄養法（注入の手順）",
+        "reading": "けいびいかんからのけいかんえいようほう",
         "purpose": "経口摂取が困難な患者に対し、胃内に留置されたカテーテルから安全に栄養剤・水分を投与する。",
         "items": [
             "栄養剤（人肌程度に温めたもの）",
@@ -305,7 +322,9 @@ NURSING_PROCEDURES = [
     {
         "id": "bed_bath",
         "category": "清潔・衣生活援助",
+        "category_reading": "せいけついせいかつえんじょ",
         "title": "全身清拭（ベッド上での清拭）",
+        "reading": "ぜんしんせいしき",
         "purpose": "入浴できない患者の皮膚の汚れを除去して清潔を保ち、血行促進や爽快感をもたらすとともに皮膚状態を観察する。",
         "items": [
             "洗面器",
@@ -342,7 +361,9 @@ NURSING_PROCEDURES = [
     {
         "id": "suctioning",
         "category": "呼吸・循環援助",
+        "category_reading": "こきゅうじゅんかんえんじょ",
         "title": "口腔・鼻腔内吸引（一時的吸引）",
+        "reading": "こうくうびくうないきゅういん",
         "purpose": "自力での喀痰排出が困難な患者の気道分泌物を除去し、気道開通と換気改善・誤嚥予防を図る。",
         "items": [
             "吸引器（吸引圧調整機能付き）",
@@ -383,7 +404,9 @@ NURSING_PROCEDURES = [
     {
         "id": "oxygen_therapy",
         "category": "呼吸・循環援助",
+        "category_reading": "こきゅうじゅんかんえんじょ",
         "title": "酸素吸入療法（鼻カニューレ・酸素マスク）",
+        "reading": "さんそきゅうにゅうりょうほう",
         "purpose": "低酸素血症の改善や呼吸仕事量の軽減を図るため、適切な濃度・流量の酸素を安全に投与する。",
         "items": [
             "酸素配管（または酸素ボンベ）",
@@ -418,7 +441,9 @@ NURSING_PROCEDURES = [
     {
         "id": "oral_care",
         "category": "清潔・衣生活援助",
+        "category_reading": "せいけついせいかつえんじょ",
         "title": "口腔ケア（誤嚥予防を意識したブラッシング）",
+        "reading": "こうくうけあ",
         "purpose": "口腔内の細菌数を減少させて誤嚥性肺炎やう蝕・歯周病を予防し、味覚や咀嚼・嚥下機能の維持を図る。",
         "items": [
             "歯ブラシ（ヘッドが小さく軟らかいもの）",
@@ -455,7 +480,9 @@ NURSING_PROCEDURES = [
     {
         "id": "bed_making",
         "category": "環境整備",
+        "category_reading": "かんきょうせいび",
         "title": "ベッドメーキング（臥床患者がいない場合）",
+        "reading": "べっどめーきんぐ",
         "purpose": "しわやたるみのない清潔で快適な寝床を整え、褥瘡や皮膚トラブルを予防するとともに安眠を促す。",
         "items": [
             "敷布（シーツ）",
@@ -487,6 +514,12 @@ NURSING_PROCEDURES = [
         ],
     },
 ]
+
+# カテゴリー順・手技名（あいうえお順）にソート
+NURSING_PROCEDURES = sorted(
+    RAW_NURSING_PROCEDURES,
+    key=lambda p: (p.get("category_reading", p["category"]), p.get("reading", p["title"])),
+)
 
 # ---------------------------------------------------------
 # 3. 永続化処理（URLパラメータによる自動保存・復元）
@@ -528,7 +561,7 @@ if "selected_proc_id" not in st.session_state:
     st.session_state.selected_proc_id = PROCEDURE_IDS[0]
 
 # ---------------------------------------------------------
-# 4. サイドバー：暗記モード・検索機能・手技選択・データ管理
+# 4. サイドバー：暗記モード・検索機能・カテゴリー別手技一覧
 # ---------------------------------------------------------
 st.sidebar.title("🩺 基礎看護技術ナビ")
 st.sidebar.caption("手順・根拠・重要ポイントの確認用ツール")
@@ -549,9 +582,16 @@ search_query = st.sidebar.text_input(
     help="手技名、目的、手順、根拠の中の言葉を検索できます。",
 )
 
-# カテゴリー絞り込み
-categories = ["すべて"] + sorted(list({p["category"] for p in NURSING_PROCEDURES}))
-selected_category = st.sidebar.selectbox("📂 カテゴリーで絞り込み", categories)
+# カテゴリー絞り込み（あいうえお順）
+ordered_categories = []
+for p in NURSING_PROCEDURES:
+    if p["category"] not in ordered_categories:
+        ordered_categories.append(p["category"])
+
+selected_category = st.sidebar.selectbox(
+    "📂 カテゴリーで絞り込み",
+    ["すべて"] + ordered_categories,
+)
 
 # ---------------------------------------------------------
 # 5. カスタムCSS（通常モード／暗記モード／自分用チェックマーカー）
@@ -612,13 +652,19 @@ st.markdown(
         font-size: 0.95rem;
         border: 1px solid #90caf9;
     }}
+    /* サイドバー内の手技選択ボタンの左寄せ調整 */
+    section[data-testid="stSidebar"] button[kind="secondary"],
+    section[data-testid="stSidebar"] button[kind="primary"] {{
+        justify-content: flex-start;
+        text-align: left;
+    }}
     </style>
     """,
     unsafe_allow_html=True,
 )
 
 # ---------------------------------------------------------
-# 6. 検索フィルタリング（サイドバー手技リスト）
+# 6. 検索フィルタリングとカテゴリー別手技リスト（あいうえお順）
 # ---------------------------------------------------------
 filtered_procedures = []
 for proc in NURSING_PROCEDURES:
@@ -630,6 +676,7 @@ for proc in NURSING_PROCEDURES:
         searchable_text = " ".join(
             [
                 proc["title"],
+                proc.get("reading", ""),
                 proc["category"],
                 proc["purpose"],
                 " ".join(proc["items"]),
@@ -651,26 +698,37 @@ current_proc = None
 if filtered_procedures:
     filtered_ids = [p["id"] for p in filtered_procedures]
 
-    # 現在選択中のIDがフィルタ結果に含まれていれば位置を維持し、なければ先頭を選択
-    if st.session_state.selected_proc_id in filtered_ids:
-        default_idx = filtered_ids.index(st.session_state.selected_proc_id)
-    else:
-        default_idx = 0
+    # 現在選択中のIDがフィルタ結果に含まれていなければ先頭を選択
+    if st.session_state.selected_proc_id not in filtered_ids:
         st.session_state.selected_proc_id = filtered_ids[0]
 
-    def format_proc_option(pid: str) -> str:
-        p = PROCEDURE_MAP[pid]
-        cnt = st.session_state.review_counts[pid]
-        return f"【{p['category']}】{p['title']}（確認: {cnt}回）"
+    # カテゴリーごとにグループ化（各カテゴリー内は既に「あいうえお順」）
+    grouped_procs = {}
+    for proc in filtered_procedures:
+        grouped_procs.setdefault(proc["category"], []).append(proc)
 
-    chosen_id = st.sidebar.radio(
-        f"📋 該当する技術（{len(filtered_procedures)}件）",
-        options=filtered_ids,
-        index=default_idx,
-        format_func=format_proc_option,
-    )
-    st.session_state.selected_proc_id = chosen_id
-    current_proc = PROCEDURE_MAP[chosen_id]
+    st.sidebar.markdown(f"### 📋 技術一覧（{len(filtered_procedures)}件）")
+    st.sidebar.caption("※ カテゴリー内はあいうえお順です")
+
+    for cat_name, procs_in_cat in grouped_procs.items():
+        st.sidebar.markdown(f"**📂 {cat_name}**")
+        for proc in procs_in_cat:
+            pid = proc["id"]
+            cnt = st.session_state.review_counts[pid]
+            is_selected = pid == st.session_state.selected_proc_id
+            prefix = "▶ " if is_selected else ""
+            btn_label = f"{prefix}{proc['title']}（{cnt}回）"
+
+            if st.sidebar.button(
+                btn_label,
+                key=f"nav_btn_{pid}",
+                type="primary" if is_selected else "secondary",
+                use_container_width=True,
+            ):
+                st.session_state.selected_proc_id = pid
+                st.rerun()
+
+    current_proc = PROCEDURE_MAP[st.session_state.selected_proc_id]
 
 # サイドバー下部：学習記録の保存ガイドとバックアップ機能
 st.sidebar.markdown("---")

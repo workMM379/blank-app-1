@@ -750,26 +750,38 @@ st.markdown(
         border-radius: 0 6px 6px 0;
         font-size: 0.92rem;
     }}
+    /* 確認回数表示枠と3つの操作ボタンの枠サイズ・位置を完全統一 */
     .count-badge {{
-        display: inline-flex;
+        box-sizing: border-box;
+        display: flex;
         align-items: center;
         justify-content: center;
         height: 42px;
+        min-height: 42px;
         width: 100%;
+        margin: 0;
         background-color: #e3f2fd;
         color: #0d47a1;
         font-weight: 700;
-        padding: 0 12px;
+        padding: 0 8px;
         border-radius: 8px;
         font-size: 0.95rem;
         border: 1px solid #90caf9;
         white-space: nowrap;
     }}
-    /* メイン画面のボタン枠（高さ・文字折り返しなし）を統一 */
+    section[data-testid="stMain"] div[data-testid="stMarkdownContainer"]:has(.count-badge) {{
+        margin: 0;
+        padding: 0;
+    }}
+    section[data-testid="stMain"] div[data-testid="stMarkdownContainer"]:has(.count-badge) p {{
+        margin: 0;
+    }}
     section[data-testid="stMain"] button[kind="secondary"],
     section[data-testid="stMain"] button[kind="primary"] {{
+        box-sizing: border-box;
         height: 42px;
         min-height: 42px;
+        border-radius: 8px;
         white-space: nowrap;
         padding-left: 8px;
         padding-right: 8px;
@@ -901,8 +913,8 @@ with tab_procedure:
         st.caption(f"カテゴリー：{current_proc['category']}")
         st.title(current_proc["title"])
 
-        # 確認回数の表示とカウント操作ボタン（3つのボタンの枠サイズを完全統一）
-        col_badge, col_add, col_sub, col_clear, _ = st.columns([1.9, 1.8, 1.8, 1.8, 1.7])
+        # 確認回数の表示枠と3つの操作ボタンをすべて同じ幅・高さで統一
+        col_badge, col_add, col_sub, col_clear, _ = st.columns([2, 2, 2, 2, 1])
         with col_badge:
             st.markdown(
                 f"<div class='count-badge'>👀 確認回数：{current_count} 回</div>",

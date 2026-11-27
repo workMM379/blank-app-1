@@ -640,8 +640,9 @@ for pid in PROCEDURE_IDS:
     if pid not in st.session_state.review_counts:
         st.session_state.review_counts[pid] = 0
 
+# アプリ起動時は何も選択していない状態（None）にする
 if "selected_proc_id" not in st.session_state:
-    st.session_state.selected_proc_id = PROCEDURE_IDS[0]
+    st.session_state.selected_proc_id = None
 
 # 検索・絞り込み用のセッション状態初期化
 if "search_query_input" not in st.session_state:
@@ -834,9 +835,12 @@ current_proc = None
 if filtered_procedures:
     filtered_ids = [p["id"] for p in filtered_procedures]
 
-    # 現在選択中のIDがフィルタ結果に含まれていなければ先頭を選択
-    if st.session_state.selected_proc_id not in filtered_ids:
-        st.session_state.selected_proc_id = filtered_ids[0]
+    # 選択中のIDが現在のフィルタ結果に含まれない場合は未選択（None）に戻す
+    if (
+        st.session_state.selected_proc_id is not None
+        and st.session_state.selected_proc_id not in filtered_ids
+    ):
+        st.session_state.selected_proc_id = None
 
     # カテゴリーごとにグループ化（各カテゴリー内は既に「あいうえお順」）
     grouped_procs = {}
@@ -869,7 +873,10 @@ if filtered_procedures:
                     st.session_state.selected_proc_id = pid
                     st.rerun()
 
-    current_proc = PROCEDURE_MAP[st.session_state.selected_proc_id]
+    if st.session_state.selected_proc_id is not None:
+        current_proc = PROCEDURE_MAP[st.session_state.selected_proc_id]
+else:
+    st.session_state.selected_proc_id = None
 
 # サイドバー下部：学習記録の保存ガイドとバックアップ機能
 st.sidebar.markdown("---")
@@ -906,13 +913,34 @@ tab_procedure, tab_chart = st.tabs(["📖 手順の確認", "📊 確認回数�
 
 # === タブ1：手順の確認 ===
 with tab_procedure:
-    if current_proc is None:
-        st.warning(f"「{search_query}」に一致する看護技術が見つかりませんでした。サイドバーの「🧹 検索・絞り込みをクリア」で解除できます。")
+    if not filtered_procedures:
+        st.warning(
+            f"「{search_query}」に一致する看護技術が見つかりませんでした。サイドバーの「🧹 検索・絞り込みをクリア」で解除できます。"
+        )
+    elif current_proc is None:
+        st.title("🩺 基礎看護技術 手順確認アプリ")
+        st.info("👈 左のサイドバー（スマホの場合は左上の「＞」アイコン）からカテゴリーを開き、確認したい基礎看護技術を選択してください。")
+        st.markdown(
+            """
+            #### 💡 このアプリの使い方
+            * **重要ポイントの確認**：薄い黄色マーカーは特に重要なポイントです。
+            * **自分用マーキング**：各手順の左にあるチェックボックスを入れると、水色マーカーを引くことができます。
+            * **暗記モード**：サイドバーの「🙈 暗記モード」をONにすると、黄色マーカー部分の文字を隠して学習できます。
+            * **確認回数の記録**：手技を確認したら「✅ 確認完了（+1回）」で学習回数を記録し、「📊 確認回数グラフ」タブで進捗を振り返れます。
+            """
+        )
     else:
         proc_id = current_proc["id"]
         current_count = st.session_state.review_counts[proc_id]
 
-        st.caption(f"カテゴリー：{current_proc['category']}")
+        col_cat, col_close = st.columns([8, 2])
+        with col_cat:
+            st.caption(f"カテゴリー：{current_proc['category']}")
+        with col_close:
+            if st.button("✖ 選択を閉じる", key=f"close_{proc_id}", use_container_width=True):
+                st.session_state.selected_proc_id = None
+                st.rerun()
+
         st.title(current_proc["title"])
 
         # 確認回数の表示枠（大きめ）と3つの操作ボタン（少し小さめで統一）

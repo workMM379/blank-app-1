@@ -560,6 +560,20 @@ for pid in PROCEDURE_IDS:
 if "selected_proc_id" not in st.session_state:
     st.session_state.selected_proc_id = PROCEDURE_IDS[0]
 
+# 検索・絞り込み用のセッション状態初期化
+if "search_query_input" not in st.session_state:
+    st.session_state.search_query_input = ""
+
+if "selected_category_input" not in st.session_state:
+    st.session_state.selected_category_input = "すべて"
+
+
+def clear_filters():
+    """検索キーワードとカテゴリー絞り込みを初期状態に戻す"""
+    st.session_state.search_query_input = ""
+    st.session_state.selected_category_input = "すべて"
+
+
 # ---------------------------------------------------------
 # 4. サイドバー：暗記モード・検索機能・カテゴリー別手技一覧
 # ---------------------------------------------------------
@@ -578,6 +592,7 @@ st.sidebar.markdown("---")
 # キーワード検索ボックス
 search_query = st.sidebar.text_input(
     "🔍 キーワード検索",
+    key="search_query_input",
     placeholder="例：逆血、クラーク、吸引圧...",
     help="手技名、目的、手順、根拠の中の言葉を検索できます。",
 )
@@ -591,6 +606,16 @@ for p in NURSING_PROCEDURES:
 selected_category = st.sidebar.selectbox(
     "📂 カテゴリーで絞り込み",
     ["すべて"] + ordered_categories,
+    key="selected_category_input",
+)
+
+# 検索・絞り込みクリアボタン
+is_filtered = bool(search_query.strip()) or (selected_category != "すべて")
+st.sidebar.button(
+    "🧹 検索・絞り込みをクリア",
+    on_click=clear_filters,
+    disabled=not is_filtered,
+    use_container_width=True,
 )
 
 # ---------------------------------------------------------
@@ -707,6 +732,7 @@ if filtered_procedures:
     for proc in filtered_procedures:
         grouped_procs.setdefault(proc["category"], []).append(proc)
 
+    st.sidebar.markdown("---")
     st.sidebar.markdown(f"### 📋 技術一覧（{len(filtered_procedures)}件）")
     st.sidebar.caption("※ カテゴリー内はあいうえお順です")
 
@@ -766,7 +792,7 @@ tab_procedure, tab_chart = st.tabs(["📖 手順の確認", "📊 確認回数�
 # === タブ1：手順の確認 ===
 with tab_procedure:
     if current_proc is None:
-        st.warning(f"「{search_query}」に一致する看護技術が見つかりませんでした。別のキーワードでお試しください。")
+        st.warning(f"「{search_query}」に一致する看護技術が見つかりませんでした。サイドバーの「🧹 検索・絞り込みをクリア」で解除できます。")
     else:
         proc_id = current_proc["id"]
         current_count = st.session_state.review_counts[proc_id]

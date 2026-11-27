@@ -1,7 +1,7 @@
 import streamlit as st
 
 # ---------------------------------------------------------
-# 1. ページ設定とカスタムCSS（薄い黄色マーカー風のスタイル）
+# 1. ページ設定
 # ---------------------------------------------------------
 st.set_page_config(
     page_title="基礎看護技術 手順確認アプリ",
@@ -9,34 +9,9 @@ st.set_page_config(
     layout="wide",
 )
 
-st.markdown(
-    """
-    <style>
-    /* 薄い黄色マーカー（蛍光ペン風） */
-    .marker {
-        background: linear-gradient(transparent 45%, #fff59d 45%);
-        font-weight: 600;
-        padding: 0 3px;
-        border-radius: 2px;
-    }
-    /* 根拠・ポイント表示用の枠 */
-    .point-box {
-        background-color: #f8f9fa;
-        border-left: 4px solid #fbc02d;
-        padding: 10px 14px;
-        margin-top: 6px;
-        margin-bottom: 14px;
-        border-radius: 0 6px 6px 0;
-        font-size: 0.92rem;
-    }
-    </style>
-    """,
-    unsafe_allow_html=True,
-)
-
 # ---------------------------------------------------------
-# 2. 基礎看護技術データ（ここを編集・追加して内容を拡張できます）
-#    重要箇所は <span class="marker">〜</span> で囲みます
+# 2. 基礎看護技術データ（全9手技収録）
+#    重要箇所は <span class='marker'>〜</span> で囲みます
 # ---------------------------------------------------------
 NURSING_PROCEDURES = [
     {
@@ -198,7 +173,8 @@ NURSING_PROCEDURES = [
                 "rationale": "下側の肩関節への過負荷や骨突出部への局所圧迫を防ぎ、安楽な姿勢を維持するため。",
             },
         ],
-    },{
+    },
+    {
         "id": "venipuncture",
         "category": "診療の補助",
         "title": "静脈血採血（真空採血管ホルダー法）",
@@ -364,10 +340,19 @@ NURSING_PROCEDURES = [
 ]
 
 # ---------------------------------------------------------
-# 3. サイドバー：検索機能と手技選択
+# 3. サイドバー：暗記モード・検索機能・手技選択
 # ---------------------------------------------------------
 st.sidebar.title("🩺 基礎看護技術ナビ")
 st.sidebar.caption("手順・根拠・重要ポイントの確認用ツール")
+
+# 暗記モードの切り替えトグル
+memorize_mode = st.sidebar.toggle(
+    "🙈 暗記モード（重要箇所を隠す）",
+    value=False,
+    help="ONにすると黄色マーカー部分の文字が隠れます。隠れた部分にカーソルを合わせる（またはタップする）と個別に答えを確認できます。",
+)
+
+st.sidebar.markdown("---")
 
 # キーワード検索ボックス
 search_query = st.sidebar.text_input(
@@ -380,7 +365,57 @@ search_query = st.sidebar.text_input(
 categories = ["すべて"] + sorted(list({p["category"] for p in NURSING_PROCEDURES}))
 selected_category = st.sidebar.selectbox("📂 カテゴリーで絞り込み", categories)
 
-# 検索条件に合う手技をフィルタリング
+# ---------------------------------------------------------
+# 4. カスタムCSS（通常モード／暗記モードのスタイル切り替え）
+# ---------------------------------------------------------
+if memorize_mode:
+    marker_css = """
+    .marker {
+        background-color: #fff176;
+        color: transparent;
+        border-bottom: 2px dashed #f57f17;
+        padding: 1px 6px;
+        border-radius: 4px;
+        cursor: pointer;
+        user-select: none;
+        transition: color 0.15s ease, background-color 0.15s ease;
+    }
+    .marker:hover, .marker:active {
+        color: #111111;
+        background-color: #fff9c4;
+    }
+    """
+else:
+    marker_css = """
+    .marker {
+        background: linear-gradient(transparent 45%, #fff59d 45%);
+        font-weight: 600;
+        padding: 0 3px;
+        border-radius: 2px;
+    }
+    """
+
+st.markdown(
+    f"""
+    <style>
+    {marker_css}
+    .point-box {{
+        background-color: #f8f9fa;
+        border-left: 4px solid #fbc02d;
+        padding: 10px 14px;
+        margin-top: 6px;
+        margin-bottom: 14px;
+        border-radius: 0 6px 6px 0;
+        font-size: 0.92rem;
+    }}
+    </style>
+    """,
+    unsafe_allow_html=True,
+)
+
+# ---------------------------------------------------------
+# 5. 検索フィルタリングとメイン画面の表示
+# ---------------------------------------------------------
 filtered_procedures = []
 for proc in NURSING_PROCEDURES:
     if selected_category != "すべて" and proc["category"] != selected_category:
@@ -388,7 +423,6 @@ for proc in NURSING_PROCEDURES:
 
     if search_query.strip():
         q = search_query.strip().lower()
-        # HTMLタグを除いた検索対象テキストを作成
         searchable_text = " ".join(
             [
                 proc["title"],
@@ -403,22 +437,15 @@ for proc in NURSING_PROCEDURES:
                 ),
             ]
         ).lower()
-        # 簡易的なタグ除去
         searchable_text = searchable_text.replace("<span class='marker'>", "").replace("</span>", "")
         if q not in searchable_text:
             continue
 
     filtered_procedures.append(proc)
 
-st.sidebar.markdown("---")
-
-# ---------------------------------------------------------
-# 4. メイン画面の表示
-# ---------------------------------------------------------
 if not filtered_procedures:
     st.warning(f"「{search_query}」に一致する看護技術が見つかりませんでした。別のキーワードでお試しください。")
 else:
-    # 該当する手技から表示するものを選択
     procedure_titles = [f"【{p['category']}】{p['title']}" for p in filtered_procedures]
     selected_index = st.sidebar.radio(
         f"📋 該当する技術（{len(filtered_procedures)}件）",
@@ -432,7 +459,9 @@ else:
     st.caption(f"カテゴリー：{current_proc['category']}")
     st.title(current_proc["title"])
 
-    # 検索ヒット時のガイド表示
+    # モード・検索状態のガイド表示
+    if memorize_mode:
+        st.warning("🙈 **暗記モード中**：黄色く隠された部分にカーソルを合わせる（スマホはタップする）と答えが表示されます。")
     if search_query.strip():
         st.info(f"🔍 検索キーワード：「**{search_query.strip()}**」で絞り込み中")
 
@@ -447,7 +476,7 @@ else:
 
     st.markdown("---")
     st.subheader("📝 手順と重要ポイント")
-    st.caption("※ チェックボックスは演習時の進捗確認にお使いいただけます。薄い黄色マーカーは特に重要なポイントです。")
+    st.caption("※ チェックボックスは演習時の進捗確認にお使いいただけます。")
 
     # 手順リストの表示
     for idx, step_data in enumerate(current_proc["steps"]):
@@ -456,9 +485,7 @@ else:
             st.checkbox("", key=f"{current_proc['id']}_step_{idx}")
         with col_body:
             st.markdown(f"**{step_data['step']}**")
-            # 重要箇所に黄色マーカーを適用して表示
             st.markdown(step_data["action"], unsafe_allow_html=True)
-            # 根拠・留意点
             st.markdown(
                 f"<div class='point-box'>💡 <strong>根拠・留意点：</strong>{step_data['rationale']}</div>",
                 unsafe_allow_html=True,

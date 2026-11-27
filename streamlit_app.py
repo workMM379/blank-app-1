@@ -1,4 +1,5 @@
 import json
+import altair as alt
 import pandas as pd
 import streamlit as st
 
@@ -971,17 +972,63 @@ with tab_chart:
         )
     df_chart = pd.DataFrame(chart_records)
 
+    # 軸のズーム・スクロール変動を無効化した横棒グラフ（手技別）
     st.subheader("📋 手技別の確認回数")
-    st.bar_chart(
-        df_chart.set_index("手技名")["確認回数"],
-        horizontal=True,
-        color="#fbc02d",
+    max_proc_count = max(int(df_chart["確認回数"].max()), 5)
+    proc_chart = (
+        alt.Chart(df_chart)
+        .mark_bar(color="#fbc02d", cornerRadiusEnd=4)
+        .encode(
+            x=alt.X(
+                "確認回数:Q",
+                title="確認回数（回）",
+                scale=alt.Scale(domain=[0, max_proc_count]),
+                axis=alt.Axis(tickMinStep=1, format="d"),
+            ),
+            y=alt.Y(
+                "手技名:N",
+                sort=df_chart["手技名"].tolist(),
+                title=None,
+                axis=alt.Axis(labelLimit=300),
+            ),
+            tooltip=["カテゴリー", "手技名", "確認回数"],
+        )
+        .properties(height=max(420, len(df_chart) * 32))
+        .configure_view(strokeWidth=0)
     )
+    st.altair_chart(proc_chart, use_container_width=True)
 
     st.markdown("---")
+
+    # 軸のズーム・スクロール変動を無効化した横棒グラフ（カテゴリー別）
     st.subheader("📂 カテゴリー別の確認回数")
-    df_cat = df_chart.groupby("カテゴリー", as_index=True)["確認回数"].sum()
-    st.bar_chart(df_cat, horizontal=True, color="#42a5f5")
+    df_cat = (
+        df_chart.groupby("カテゴリー", as_index=False)["確認回数"]
+        .sum()
+    )
+    max_cat_count = max(int(df_cat["確認回数"].max()), 5)
+    cat_chart = (
+        alt.Chart(df_cat)
+        .mark_bar(color="#42a5f5", cornerRadiusEnd=4)
+        .encode(
+            x=alt.X(
+                "確認回数:Q",
+                title="確認回数（回）",
+                scale=alt.Scale(domain=[0, max_cat_count]),
+                axis=alt.Axis(tickMinStep=1, format="d"),
+            ),
+            y=alt.Y(
+                "カテゴリー:N",
+                sort=df_cat["カテゴリー"].tolist(),
+                title=None,
+                axis=alt.Axis(labelLimit=250),
+            ),
+            tooltip=["カテゴリー", "確認回数"],
+        )
+        .properties(height=max(260, len(df_cat) * 36))
+        .configure_view(strokeWidth=0)
+    )
+    st.altair_chart(cat_chart, use_container_width=True)
 
     with st.expander("🔢 数値一覧テーブルを表示"):
         st.dataframe(df_chart, use_container_width=True, hide_index=True)

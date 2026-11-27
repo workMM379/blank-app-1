@@ -887,8 +887,8 @@ with tab_procedure:
         st.caption(f"カテゴリー：{current_proc['category']}")
         st.title(current_proc["title"])
 
-        # 確認回数の表示とカウント操作ボタン
-        col_badge, col_add, col_reset, _ = st.columns([2.2, 2.2, 1.5, 3.1])
+        # 確認回数の表示とカウント操作ボタン（+1 / -1 / クリア）
+        col_badge, col_add, col_sub, col_clear, _ = st.columns([2.0, 2.0, 1.3, 1.6, 2.1])
         with col_badge:
             st.markdown(
                 f"<div class='count-badge'>👀 確認回数：{current_count} 回</div>",
@@ -899,8 +899,23 @@ with tab_procedure:
                 st.session_state.review_counts[proc_id] += 1
                 sync_counts_to_url(st.session_state.review_counts)
                 st.rerun()
-        with col_reset:
-            if st.button("🔄 0回に戻す", key=f"reset_{proc_id}", use_container_width=True):
+        with col_sub:
+            if st.button(
+                "↩️ -1回",
+                key=f"sub_{proc_id}",
+                disabled=(current_count == 0),
+                use_container_width=True,
+            ):
+                st.session_state.review_counts[proc_id] = max(0, current_count - 1)
+                sync_counts_to_url(st.session_state.review_counts)
+                st.rerun()
+        with col_clear:
+            if st.button(
+                "🗑️ クリア（0回）",
+                key=f"reset_{proc_id}",
+                disabled=(current_count == 0),
+                use_container_width=True,
+            ):
                 st.session_state.review_counts[proc_id] = 0
                 sync_counts_to_url(st.session_state.review_counts)
                 st.rerun()

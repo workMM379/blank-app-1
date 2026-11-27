@@ -972,6 +972,9 @@ with tab_chart:
         )
     df_chart = pd.DataFrame(chart_records)
 
+    # 2つのグラフの縦軸（Y軸）位置を完全に揃えるための共通ラベル幅設定
+    Y_AXIS_WIDTH = 280
+
     # 軸のズーム・スクロール変動を無効化した横棒グラフ（手技別）
     st.subheader("📋 手技別の確認回数")
     max_proc_count = max(int(df_chart["確認回数"].max()), 5)
@@ -989,7 +992,11 @@ with tab_chart:
                 "手技名:N",
                 sort=df_chart["手技名"].tolist(),
                 title=None,
-                axis=alt.Axis(labelLimit=300),
+                axis=alt.Axis(
+                    labelLimit=Y_AXIS_WIDTH - 10,
+                    minExtent=Y_AXIS_WIDTH,
+                    maxExtent=Y_AXIS_WIDTH,
+                ),
             ),
             tooltip=["カテゴリー", "手技名", "確認回数"],
         )
@@ -1003,7 +1010,7 @@ with tab_chart:
     # 軸のズーム・スクロール変動を無効化した横棒グラフ（カテゴリー別）
     st.subheader("📂 カテゴリー別の確認回数")
     df_cat = (
-        df_chart.groupby("カテゴリー", as_index=False)["確認回数"]
+        df_chart.groupby("カテゴリー", as_index=False, sort=False)["確認回数"]
         .sum()
     )
     max_cat_count = max(int(df_cat["確認回数"].max()), 5)
@@ -1021,7 +1028,11 @@ with tab_chart:
                 "カテゴリー:N",
                 sort=df_cat["カテゴリー"].tolist(),
                 title=None,
-                axis=alt.Axis(labelLimit=250),
+                axis=alt.Axis(
+                    labelLimit=Y_AXIS_WIDTH - 10,
+                    minExtent=Y_AXIS_WIDTH,
+                    maxExtent=Y_AXIS_WIDTH,
+                ),
             ),
             tooltip=["カテゴリー", "確認回数"],
         )

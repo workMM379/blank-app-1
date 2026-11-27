@@ -689,7 +689,7 @@ st.markdown(
 )
 
 # ---------------------------------------------------------
-# 6. 検索フィルタリングとカテゴリー別手技リスト（あいうえお順）
+# 6. 検索フィルタリングと折りたたみ式カテゴリー別手技リスト
 # ---------------------------------------------------------
 filtered_procedures = []
 for proc in NURSING_PROCEDURES:
@@ -734,25 +734,29 @@ if filtered_procedures:
 
     st.sidebar.markdown("---")
     st.sidebar.markdown(f"### 📋 技術一覧（{len(filtered_procedures)}件）")
-    st.sidebar.caption("※ カテゴリー内はあいうえお順です")
+    st.sidebar.caption("※ カテゴリーをクリックで開閉できます（あいうえお順）")
 
     for cat_name, procs_in_cat in grouped_procs.items():
-        st.sidebar.markdown(f"**📂 {cat_name}**")
-        for proc in procs_in_cat:
-            pid = proc["id"]
-            cnt = st.session_state.review_counts[pid]
-            is_selected = pid == st.session_state.selected_proc_id
-            prefix = "▶ " if is_selected else ""
-            btn_label = f"{prefix}{proc['title']}（{cnt}回）"
+        # 選択中の手技が含まれるカテゴリー、または検索・絞り込み中は自動で展開する
+        has_selected = any(p["id"] == st.session_state.selected_proc_id for p in procs_in_cat)
+        is_expanded = has_selected or is_filtered
 
-            if st.sidebar.button(
-                btn_label,
-                key=f"nav_btn_{pid}",
-                type="primary" if is_selected else "secondary",
-                use_container_width=True,
-            ):
-                st.session_state.selected_proc_id = pid
-                st.rerun()
+        with st.sidebar.expander(f"📂 {cat_name}（{len(procs_in_cat)}件）", expanded=is_expanded):
+            for proc in procs_in_cat:
+                pid = proc["id"]
+                cnt = st.session_state.review_counts[pid]
+                is_selected = pid == st.session_state.selected_proc_id
+                prefix = "▶ " if is_selected else ""
+                btn_label = f"{prefix}{proc['title']}（{cnt}回）"
+
+                if st.button(
+                    btn_label,
+                    key=f"nav_btn_{pid}",
+                    type="primary" if is_selected else "secondary",
+                    use_container_width=True,
+                ):
+                    st.session_state.selected_proc_id = pid
+                    st.rerun()
 
     current_proc = PROCEDURE_MAP[st.session_state.selected_proc_id]
 

@@ -702,7 +702,7 @@ st.sidebar.button(
 )
 
 # ---------------------------------------------------------
-# 5. カスタムCSS（通常モード／暗記モード／自分用チェックマーカー／ボタン統一）
+# 5. カスタムCSS（通常モード／暗記モード／自分用チェックマーカー／ボタン調整）
 # ---------------------------------------------------------
 if memorize_mode:
     marker_css = """
@@ -750,22 +750,22 @@ st.markdown(
         border-radius: 0 6px 6px 0;
         font-size: 0.92rem;
     }}
-    /* 確認回数表示枠と3つの操作ボタンの枠サイズ・位置を完全統一 */
+    /* 確認回数表示枠（大きめ）と3つの操作ボタン（少しコンパクト）のサイズ調整 */
     .count-badge {{
         box-sizing: border-box;
         display: flex;
         align-items: center;
         justify-content: center;
-        height: 42px;
-        min-height: 42px;
+        height: 44px;
+        min-height: 44px;
         width: 100%;
         margin: 0;
         background-color: #e3f2fd;
         color: #0d47a1;
         font-weight: 700;
-        padding: 0 8px;
+        padding: 0 12px;
         border-radius: 8px;
-        font-size: 0.95rem;
+        font-size: 1.0rem;
         border: 1px solid #90caf9;
         white-space: nowrap;
     }}
@@ -776,15 +776,17 @@ st.markdown(
     section[data-testid="stMain"] div[data-testid="stMarkdownContainer"]:has(.count-badge) p {{
         margin: 0;
     }}
+    /* 3つの操作ボタンは確認回数表示枠より一回り小さく揃える */
     section[data-testid="stMain"] button[kind="secondary"],
     section[data-testid="stMain"] button[kind="primary"] {{
         box-sizing: border-box;
-        height: 42px;
-        min-height: 42px;
-        border-radius: 8px;
+        height: 36px;
+        min-height: 36px;
+        margin-top: 4px;
+        border-radius: 6px;
+        font-size: 0.86rem;
         white-space: nowrap;
-        padding-left: 8px;
-        padding-right: 8px;
+        padding: 0 6px;
     }}
     /* サイドバー内の手技選択ボタンの左寄せ調整 */
     section[data-testid="stSidebar"] button[kind="secondary"],
@@ -913,8 +915,8 @@ with tab_procedure:
         st.caption(f"カテゴリー：{current_proc['category']}")
         st.title(current_proc["title"])
 
-        # 確認回数の表示枠と3つの操作ボタンをすべて同じ幅・高さで統一
-        col_badge, col_add, col_sub, col_clear, _ = st.columns([2, 2, 2, 2, 1])
+        # 確認回数の表示枠（大きめ）と3つの操作ボタン（少し小さめで統一）
+        col_badge, col_add, col_sub, col_clear, _ = st.columns([2.3, 1.6, 1.6, 1.6, 1.9])
         with col_badge:
             st.markdown(
                 f"<div class='count-badge'>👀 確認回数：{current_count} 回</div>",

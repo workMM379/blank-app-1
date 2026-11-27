@@ -529,16 +529,13 @@ for pid in PROCEDURE_IDS:
 st.sidebar.title("🩺 基礎看護技術ナビ")
 st.sidebar.caption("手順・根拠・重要ポイントの確認用ツール")
 
-# 全体の学習進捗表示
+# 確認済み手技数の表示（累計表示は削除）
 total_procs = len(NURSING_PROCEDURES)
 reviewed_procs = sum(1 for count in st.session_state.review_counts.values() if count > 0)
-total_reviews = sum(st.session_state.review_counts.values())
 
 st.sidebar.metric(
-    label="📊 確認済み手技数（累計確認回数）",
+    label="📊 確認済み手技数",
     value=f"{reviewed_procs} / {total_procs} 手技",
-    delta=f"合計 {total_reviews} 回確認",
-    delta_color="off",
 )
 
 # 暗記モードの切り替えトグル
@@ -562,7 +559,7 @@ categories = ["すべて"] + sorted(list({p["category"] for p in NURSING_PROCEDU
 selected_category = st.sidebar.selectbox("📂 カテゴリーで絞り込み", categories)
 
 # ---------------------------------------------------------
-# 5. カスタムCSS（通常モード／暗記モードのスタイル切り替え）
+# 5. カスタムCSS（通常モード／暗記モード／自分用チェックマーカー）
 # ---------------------------------------------------------
 if memorize_mode:
     marker_css = """
@@ -595,6 +592,12 @@ st.markdown(
     f"""
     <style>
     {marker_css}
+    /* 自分がチェックボックスを入れた手順に引く水色マーカー */
+    .user-marker {{
+        background: linear-gradient(transparent 45%, #b3e5fc 45%);
+        padding: 0 3px;
+        border-radius: 2px;
+    }}
     .point-box {{
         background-color: #f8f9fa;
         border-left: 4px solid #fbc02d;
@@ -741,15 +744,27 @@ with tab_procedure:
 
         st.markdown("---")
         st.subheader("📝 手順と重要ポイント")
-        st.caption("※ チェックボックスは演習時の進捗確認にお使いいただけます。確認し終えたら上部の「✅ 確認完了（+1回）」を押してください。")
+        st.caption(
+            "※ 左のチェックボックスを入れると、その手順に水色マーカーが引かれます（重要な黄色マーカーはそのまま残ります）。"
+        )
 
         for idx, step_data in enumerate(current_proc["steps"]):
             col_chk, col_body = st.columns([0.05, 0.95])
             with col_chk:
-                st.checkbox("", key=f"{proc_id}_step_{idx}")
+                is_checked = st.checkbox(
+                    "マーカー",
+                    key=f"{proc_id}_step_{idx}",
+                    label_visibility="collapsed",
+                )
             with col_body:
                 st.markdown(f"**{step_data['step']}**")
-                st.markdown(step_data["action"], unsafe_allow_html=True)
+                # チェックが入っていれば水色マーカーで囲む
+                action_html = (
+                    f"<span class='user-marker'>{step_data['action']}</span>"
+                    if is_checked
+                    else step_data["action"]
+                )
+                st.markdown(action_html, unsafe_allow_html=True)
                 st.markdown(
                     f"<div class='point-box'>💡 <strong>根拠・留意点：</strong>{step_data['rationale']}</div>",
                     unsafe_allow_html=True,
@@ -760,16 +775,14 @@ with tab_chart:
     st.title("📊 基礎看護技術 確認回数グラフ")
     st.caption("どの技術を何回確認したかを一覧で比較できます。確認回数が0回の技術を優先して復習しましょう。")
 
-    # サマリー指標
-    m1, m2, m3 = st.columns(3)
+    # サマリー指標（累計表示は削除）
+    m1, m2 = st.columns(2)
     m1.metric("確認済みの技術", f"{reviewed_procs} / {total_procs} 手技")
-    m2.metric("累計確認回数", f"{total_reviews} 回")
     unreviewed_count = total_procs - reviewed_procs
-    m3.metric("未確認の技術", f"{unreviewed_count} 手技")
+    m2.metric("未確認の技術", f"{unreviewed_count} 手技")
 
     st.markdown("---")
 
-    # データフレーム作成（手技ごとの確認回数）
     chart_records = []
     for p in NURSING_PROCEDURES:
         chart_records.append(
@@ -782,7 +795,6 @@ with tab_chart:
     df_chart = pd.DataFrame(chart_records)
 
     st.subheader("📋 手技別の確認回数")
-    # 横棒グラフで手技名が読みやすいように表示
     st.bar_chart(
         df_chart.set_index("手技名")["確認回数"],
         horizontal=True,
@@ -790,7 +802,7 @@ with tab_chart:
     )
 
     st.markdown("---")
-    st.subheader("📂 カテゴリー別の合計確認回数")
+    st.subheader("📂 カテゴリー別の確認回数")
     df_cat = df_chart.groupby("カテゴリー", as_index=True)["確認回数"].sum()
     st.bar_chart(df_cat, horizontal=True, color="#42a5f5")
 

@@ -297,4 +297,525 @@ NURSING_PROCEDURES = [
             },
             {
                 "step": "5. フラッシュと注入後の体位保持",
-                "action": "注入終了
+                "action": "注入終了後、<span class='marker'>微温湯（白湯）20〜30mL</span>を注入してチューブ内を洗浄（フラッシュ）し、栓を閉じる。注入後も<span class='marker'>30〜60分間はファーラー位</span>を保つ。",
+                "rationale": "チューブ内の栄養剤残留による閉塞や細菌繁殖を防ぎ、食後すぐの逆流を予防するため。",
+            },
+        ],
+    },
+    {
+        "id": "bed_bath",
+        "category": "清潔・衣生活援助",
+        "title": "全身清拭（ベッド上での清拭）",
+        "purpose": "入浴できない患者の皮膚の汚れを除去して清潔を保ち、血行促進や爽快感をもたらすとともに皮膚状態を観察する。",
+        "items": [
+            "洗面器",
+            "50〜55℃のお湯",
+            "清拭用タオル（2〜3枚）",
+            "バスタオル（2枚）",
+            "保湿剤",
+            "清潔な寝衣",
+            "未滅菌手袋（陰部清拭用）",
+        ],
+        "steps": [
+            {
+                "step": "1. 環境調整と湯温の確認",
+                "action": "室温を<span class='marker'>22〜26℃</span>に調整し、隙間風を防ぐ。洗面器に<span class='marker'>50〜55℃</span>のお湯を用意し、絞ったタオルの温度を看護師の手首の内側で確認する。",
+                "rationale": "気化熱による体温低下（冷感）を防ぎ、熱傷を防止するため。",
+            },
+            {
+                "step": "2. 清拭の基本原則（末梢から中枢へ）",
+                "action": "タオルは指先が遊ばないよう<span class='marker'>ミトン巻き</span>にし、洗う部位以外はバスタオルで覆う。四肢は<span class='marker'>末梢から中枢（指先から心臓）に向かって</span>拭く。",
+                "rationale": "静脈血やリンパ液の還流を促し、血行促進効果を高めるため。",
+            },
+            {
+                "step": "3. 清拭の順序",
+                "action": "①顔面（目頭から目尻へ）→ ②上肢 → ③胸部・腹部（<span class='marker'>腸の走行に沿った「の」の字</span>）→ ④背部（側臥位にして殿部まで）→ ⑤下肢 → ⑥陰部の順に拭く。",
+                "rationale": "汚染の少ない部位から多い部位へと進めることで、感染や汚染の拡大を防ぐため。",
+            },
+            {
+                "step": "4. 皮膚の観察と保湿・更衣",
+                "action": "骨突出部の発赤（褥瘡の初期徴候）や皮膚の乾燥・剥離がないか観察する。水分を乾いたタオルで拭き取り、<span class='marker'>保湿剤を塗布</span>してから清潔な寝衣に着替えさせる。",
+                "rationale": "皮膚のバリア機能を維持し、皮膚トラブルや褥瘡を予防するため。",
+            },
+        ],
+    },
+    {
+        "id": "suctioning",
+        "category": "呼吸・循環援助",
+        "title": "口腔・鼻腔内吸引（一時的吸引）",
+        "purpose": "自力での喀痰排出が困難な患者の気道分泌物を除去し、気道開通と換気改善・誤嚥予防を図る。",
+        "items": [
+            "吸引器（吸引圧調整機能付き）",
+            "吸引カテーテル（10〜14Fr）",
+            "未滅菌手袋（または滅菌手袋）",
+            "洗浄水（滅菌精製水または水道水）",
+            "アルコール綿（または清浄綿）",
+            "パルスオキシメーター",
+        ],
+        "steps": [
+            {
+                "step": "1. アセスメントと吸引圧の設定",
+                "action": "呼吸音・SpO2・分泌物の貯留部位を確認する。吸引圧は成人で<span class='marker'>150〜200mmHg（20〜26kPa）以下</span>に設定する。",
+                "rationale": "吸引圧が高すぎると気道粘膜の損傷や出血、無気肺を引き起こすため。",
+            },
+            {
+                "step": "2. カテーテルの接続と無菌操作",
+                "action": "手指衛生後、手袋を装着する。カテーテルの<span class='marker'>先端から10〜15cm</span>の挿入部分には直接触れないよう清潔に扱い、吸引チューブに接続する。",
+                "rationale": "気道内へ細菌が持ち込まれることによる呼吸器感染症（肺炎など）を防ぐため。",
+            },
+            {
+                "step": "3. カテーテルの挿入（陰圧をかけずに挿入）",
+                "action": "吸引チューブの根元を折り曲げて<span class='marker'>陰圧をかけない状態</span>で、鼻腔からは下鼻道に沿って<span class='marker'>15〜20cm</span>（口腔からは10〜15cm）静かに挿入する。",
+                "rationale": "陰圧をかけながら挿入すると、カテーテル先端が粘膜に吸着して損傷・出血を招くため。",
+            },
+            {
+                "step": "4. 分泌物の吸引（1回10〜15秒以内）",
+                "action": "折り曲げていたチューブを離して陰圧をかけ、カテーテルを<span class='marker'>指先で回転させながら引き抜く</span>。1回の吸引時間は<span class='marker'>10〜15秒以内</span>とする。",
+                "rationale": "吸引中は気道内の酸素も同時に吸い出されるため、長時間の吸引は低酸素血症や不整脈を誘発する。",
+            },
+            {
+                "step": "5. カテーテルの洗浄と観察",
+                "action": "アルコール綿でカテーテルの外側を拭き、洗浄水を吸わせて内腔を洗い流す。吸引後の<span class='marker'>呼吸状態・SpO2の回復と痰の性状</span>を観察する。",
+                "rationale": "カテーテル内の分泌物残留による閉塞や細菌繁殖を防ぎ、吸引効果を評価するため。",
+            },
+        ],
+    },
+    {
+        "id": "oxygen_therapy",
+        "category": "呼吸・循環援助",
+        "title": "酸素吸入療法（鼻カニューレ・酸素マスク）",
+        "purpose": "低酸素血症の改善や呼吸仕事量の軽減を図るため、適切な濃度・流量の酸素を安全に投与する。",
+        "items": [
+            "酸素配管（または酸素ボンベ）",
+            "酸素流量計",
+            "加湿瓶（滅菌精製水入り・4L/分以上等で必要な場合）",
+            "鼻カニューレまたは酸素マスク",
+            "パルスオキシメーター",
+        ],
+        "steps": [
+            {
+                "step": "1. 指示確認と火気厳禁の徹底",
+                "action": "医師の指示（投与デバイス・酸素流量・目標SpO2）を確認する。周囲に<span class='marker'>火気や静電気の発生源がないこと</span>を確認する。",
+                "rationale": "酸素は支燃性が強く、火気が近づくと激しい燃焼や火災・爆発の危険があるため。",
+            },
+            {
+                "step": "2. 流量の調整と酸素流出の確認",
+                "action": "流量計のフロート（浮き玉）の<span class='marker'>中心（または上端・機器仕様に従う）</span>を指示流量に合わせる。皮膚に当てる前に<span class='marker'>酸素が実際に出ていること</span>を確認する。",
+                "rationale": "接続外れや流量計の閉塞による酸素未投与の事故を確実に防ぐため。",
+            },
+            {
+                "step": "3. デバイスの装着と適切な流量管理",
+                "action": "鼻カニューレはプロングの湾曲を鼻腔の向きに合わせて装着する。簡易酸素マスクを使用する場合は、呼気の再呼吸（CO2貯留）を防ぐため<span class='marker'>必ず5L/分以上</span>で投与する。",
+                "rationale": "簡易酸素マスクで流量が5L/分未満になると、マスク内に呼気（二酸化炭素）が滞留し高炭酸ガス血症を招くため。",
+            },
+            {
+                "step": "4. 皮膚トラブルの予防と観察",
+                "action": "チューブが耳介や頬・鼻腔粘膜を強く圧迫していないか確認し、必要に応じて保護材を当てる。装着後は<span class='marker'>SpO2・呼吸数・意識レベル（CO2ナルコーシス徴候）</span>を観察する。",
+                "rationale": "長時間の圧迫による医療関連機器圧迫創傷（MDRPU）や、COPD患者等でのCO2ナルコーシスを早期発見するため。",
+            },
+        ],
+    },
+    {
+        "id": "oral_care",
+        "category": "清潔・衣生活援助",
+        "title": "口腔ケア（誤嚥予防を意識したブラッシング）",
+        "purpose": "口腔内の細菌数を減少させて誤嚥性肺炎やう蝕・歯周病を予防し、味覚や咀嚼・嚥下機能の維持を図る。",
+        "items": [
+            "歯ブラシ（ヘッドが小さく軟らかいもの）",
+            "スポンジブラシ",
+            "ガーグルベースン（膿盆）",
+            "コップ（微温湯）",
+            "口腔保湿剤",
+            "未滅菌手袋",
+            "タオル・エプロン",
+        ],
+        "steps": [
+            {
+                "step": "1. 誤嚥防止の体位調整",
+                "action": "意識レベルと嚥下機能を確認する。坐位またはファーラー位にし、<span class='marker'>顎を軽く引いた姿勢（頸部前屈位）</span>をとる。仰臥位の場合は<span class='marker'>顔を横向き</span>にする。",
+                "rationale": "頸部が後屈していると気道が開き、唾液や洗浄水が気管へ流れ込みやすくなるため。",
+            },
+            {
+                "step": "2. 歯ブラシによるブラッシング",
+                "action": "ブラシの水分をよく切り、歯と歯肉の境目に<span class='marker'>45度の角度（バス法）</span>で毛先を当て、小刻みに動かしてプラーク（歯垢）を除去する。",
+                "rationale": "歯周ポケット内の細菌を効率よく除去しつつ、歯肉への過度な刺激を避けるため。",
+            },
+            {
+                "step": "3. 粘膜・舌の清掃（奥から手前へ）",
+                "action": "水気をよく絞ったスポンジブラシで、頬粘膜・口蓋・舌の表面を<span class='marker'>奥から手前へ向かって</span>優しく拭き取る。",
+                "rationale": "手前から奥へ動かすと汚れを咽頭側へ押し込み、誤嚥や嘔吐反射を誘発するため。",
+            },
+            {
+                "step": "4. 含嗽（うがい）または拭き取りと保湿",
+                "action": "うがいが可能な場合は少量の水で含嗽を促し、困難な場合は<span class='marker'>湿らせたガーゼやスポンジで汚れを回収</span>する。最後に<span class='marker'>口腔保湿剤</span>を薄く塗布する。",
+                "rationale": "口腔内の乾燥は細菌の繁殖や粘膜損傷・口臭の原因となるため、保湿して粘膜を保護する。",
+            },
+        ],
+    },
+    {
+        "id": "bed_making",
+        "category": "環境整備",
+        "title": "ベッドメーキング（臥床患者がいない場合）",
+        "purpose": "しわやたるみのない清潔で快適な寝床を整え、褥瘡や皮膚トラブルを予防するとともに安眠を促す。",
+        "items": [
+            "敷布（シーツ）",
+            "横シーツ（必要な場合）",
+            "掛け布団・カバー",
+            "枕・枕カバー",
+        ],
+        "steps": [
+            {
+                "step": "1. 環境整備とボディメカニクスの活用",
+                "action": "マットレスの汚れを払い、上下を反転させる。ベッドの高さを<span class='marker'>看護師の腰の高さ</span>に調整し、足を前後に開いて重心を低く保つ。",
+                "rationale": "マットレスの局所的なへたりを防ぎ、看護師の腰痛を予防するため。",
+            },
+            {
+                "step": "2. シーツの敷き込みとコーナーの三角折り",
+                "action": "シーツの中心線とマットレスの中心線を合わせて広げ、頭側の余りをマットレスの下へ深く折り込む。角は<span class='marker'>45度の角度で三角折り（エンベロープ法）</span>にして整える。",
+                "rationale": "三角折りにすることでシーツが固定され、体動によって緩んだりしわができたりするのを防ぐため。",
+            },
+            {
+                "step": "3. シーツの引き伸ばし（しわの防止）",
+                "action": "足側・側面の順にシーツを強く引きながらマットレスの下へ折り込み、<span class='marker'>表面に一切のしわやたるみがない状態</span>に仕上げる。",
+                "rationale": "シーツのしわは皮膚への局所的な圧迫や摩擦を生じさせ、褥瘡発生の直接的な原因となるため。",
+            },
+            {
+                "step": "4. 掛け布団と枕の配置（足元のゆとり）",
+                "action": "掛け布団は足元に<span class='marker'>タック（ひだ）を作る</span>などしてゆとりを持たせ、枕は縫い目が下や足側になるように配置する。",
+                "rationale": "掛け布団の重みで足関節が底屈位に固定され、尖足（せんそく）変形を起こすのを防ぐため。",
+            },
+        ],
+    },
+]
+
+# ---------------------------------------------------------
+# 3. 永続化処理（URLパラメータによる自動保存・復元）
+# ---------------------------------------------------------
+PROCEDURE_IDS = [p["id"] for p in NURSING_PROCEDURES]
+PROCEDURE_MAP = {p["id"]: p for p in NURSING_PROCEDURES}
+
+
+def load_counts_from_url() -> dict:
+    """URLのクエリパラメータ（?c=id1:2,id2:1）から確認回数を復元する"""
+    counts = {pid: 0 for pid in PROCEDURE_IDS}
+    raw = st.query_params.get("c", "")
+    if raw:
+        for pair in raw.split(","):
+            if ":" in pair:
+                pid, val = pair.split(":", 1)
+                if pid in counts and val.isdigit():
+                    counts[pid] = int(val)
+    return counts
+
+
+def sync_counts_to_url(counts: dict):
+    """0回より多い手技の回数をURLパラメータへ書き戻して永続化する"""
+    pairs = [f"{pid}:{cnt}" for pid, cnt in counts.items() if cnt > 0]
+    if pairs:
+        st.query_params["c"] = ",".join(pairs)
+    elif "c" in st.query_params:
+        del st.query_params["c"]
+
+
+if "review_counts" not in st.session_state:
+    st.session_state.review_counts = load_counts_from_url()
+
+for pid in PROCEDURE_IDS:
+    if pid not in st.session_state.review_counts:
+        st.session_state.review_counts[pid] = 0
+
+if "selected_proc_id" not in st.session_state:
+    st.session_state.selected_proc_id = PROCEDURE_IDS[0]
+
+# ---------------------------------------------------------
+# 4. サイドバー：暗記モード・検索機能・手技選択・データ管理
+# ---------------------------------------------------------
+st.sidebar.title("🩺 基礎看護技術ナビ")
+st.sidebar.caption("手順・根拠・重要ポイントの確認用ツール")
+
+# 暗記モードの切り替えトグル
+memorize_mode = st.sidebar.toggle(
+    "🙈 暗記モード（重要箇所を隠す）",
+    value=False,
+    help="ONにすると黄色マーカー部分の文字が隠れます。隠れた部分にカーソルを合わせる（またはタップする）と個別に答えを確認できます。",
+)
+
+st.sidebar.markdown("---")
+
+# キーワード検索ボックス
+search_query = st.sidebar.text_input(
+    "🔍 キーワード検索",
+    placeholder="例：逆血、クラーク、吸引圧...",
+    help="手技名、目的、手順、根拠の中の言葉を検索できます。",
+)
+
+# カテゴリー絞り込み
+categories = ["すべて"] + sorted(list({p["category"] for p in NURSING_PROCEDURES}))
+selected_category = st.sidebar.selectbox("📂 カテゴリーで絞り込み", categories)
+
+# ---------------------------------------------------------
+# 5. カスタムCSS（通常モード／暗記モード／自分用チェックマーカー）
+# ---------------------------------------------------------
+if memorize_mode:
+    marker_css = """
+    .marker {
+        background-color: #fff176;
+        color: transparent;
+        border-bottom: 2px dashed #f57f17;
+        padding: 1px 6px;
+        border-radius: 4px;
+        cursor: pointer;
+        user-select: none;
+        transition: color 0.15s ease, background-color 0.15s ease;
+    }
+    .marker:hover, .marker:active {
+        color: #111111;
+        background-color: #fff9c4;
+    }
+    """
+else:
+    marker_css = """
+    .marker {
+        background: linear-gradient(transparent 45%, #fff59d 45%);
+        font-weight: 600;
+        padding: 0 3px;
+        border-radius: 2px;
+    }
+    """
+
+st.markdown(
+    f"""
+    <style>
+    {marker_css}
+    /* 自分がチェックボックスを入れた手順に引く水色マーカー */
+    .user-marker {{
+        background: linear-gradient(transparent 45%, #b3e5fc 45%);
+        padding: 0 3px;
+        border-radius: 2px;
+    }}
+    .point-box {{
+        background-color: #f8f9fa;
+        border-left: 4px solid #fbc02d;
+        padding: 10px 14px;
+        margin-top: 6px;
+        margin-bottom: 14px;
+        border-radius: 0 6px 6px 0;
+        font-size: 0.92rem;
+    }}
+    .count-badge {{
+        display: inline-block;
+        background-color: #e3f2fd;
+        color: #0d47a1;
+        font-weight: 700;
+        padding: 4px 12px;
+        border-radius: 16px;
+        font-size: 0.95rem;
+        border: 1px solid #90caf9;
+    }}
+    </style>
+    """,
+    unsafe_allow_html=True,
+)
+
+# ---------------------------------------------------------
+# 6. 検索フィルタリング（サイドバー手技リスト）
+# ---------------------------------------------------------
+filtered_procedures = []
+for proc in NURSING_PROCEDURES:
+    if selected_category != "すべて" and proc["category"] != selected_category:
+        continue
+
+    if search_query.strip():
+        q = search_query.strip().lower()
+        searchable_text = " ".join(
+            [
+                proc["title"],
+                proc["category"],
+                proc["purpose"],
+                " ".join(proc["items"]),
+                " ".join(
+                    [
+                        s["step"] + " " + s["action"] + " " + s["rationale"]
+                        for s in proc["steps"]
+                    ]
+                ),
+            ]
+        ).lower()
+        searchable_text = searchable_text.replace("<span class='marker'>", "").replace("</span>", "")
+        if q not in searchable_text:
+            continue
+
+    filtered_procedures.append(proc)
+
+current_proc = None
+if filtered_procedures:
+    filtered_ids = [p["id"] for p in filtered_procedures]
+
+    # 現在選択中のIDがフィルタ結果に含まれていれば位置を維持し、なければ先頭を選択
+    if st.session_state.selected_proc_id in filtered_ids:
+        default_idx = filtered_ids.index(st.session_state.selected_proc_id)
+    else:
+        default_idx = 0
+        st.session_state.selected_proc_id = filtered_ids[0]
+
+    def format_proc_option(pid: str) -> str:
+        p = PROCEDURE_MAP[pid]
+        cnt = st.session_state.review_counts[pid]
+        return f"【{p['category']}】{p['title']}（確認: {cnt}回）"
+
+    chosen_id = st.sidebar.radio(
+        f"📋 該当する技術（{len(filtered_procedures)}件）",
+        options=filtered_ids,
+        index=default_idx,
+        format_func=format_proc_option,
+    )
+    st.session_state.selected_proc_id = chosen_id
+    current_proc = PROCEDURE_MAP[chosen_id]
+
+# サイドバー下部：学習記録の保存ガイドとバックアップ機能
+st.sidebar.markdown("---")
+with st.sidebar.expander("💾 確認回数の保存・バックアップ"):
+    st.caption(
+        "確認回数はブラウザのURLに自動保存されます。このページをブックマークすると、ブラウザを閉じた後も続きから学習できます。"
+    )
+    backup_json = json.dumps(st.session_state.review_counts, ensure_ascii=False, indent=2)
+    st.download_button(
+        label="📥 記録をJSONで保存",
+        data=backup_json,
+        file_name="nursing_review_counts.json",
+        mime="application/json",
+        use_container_width=True,
+    )
+    uploaded_file = st.file_uploader("📤 JSONから復元", type=["json"])
+    if uploaded_file is not None:
+        try:
+            loaded_data = json.load(uploaded_file)
+            if isinstance(loaded_data, dict):
+                for pid in PROCEDURE_IDS:
+                    if pid in loaded_data and isinstance(loaded_data[pid], int):
+                        st.session_state.review_counts[pid] = max(0, loaded_data[pid])
+                sync_counts_to_url(st.session_state.review_counts)
+                st.success("記録を復元しました！")
+                st.rerun()
+        except Exception:
+            st.error("ファイルの読み込みに失敗しました。")
+
+# ---------------------------------------------------------
+# 7. メイン画面（タブ切り替え：手順の確認 ／ 確認回数グラフ）
+# ---------------------------------------------------------
+tab_procedure, tab_chart = st.tabs(["📖 手順の確認", "📊 確認回数グラフ"])
+
+# === タブ1：手順の確認 ===
+with tab_procedure:
+    if current_proc is None:
+        st.warning(f"「{search_query}」に一致する看護技術が見つかりませんでした。別のキーワードでお試しください。")
+    else:
+        proc_id = current_proc["id"]
+        current_count = st.session_state.review_counts[proc_id]
+
+        st.caption(f"カテゴリー：{current_proc['category']}")
+        st.title(current_proc["title"])
+
+        # 確認回数の表示とカウント操作ボタン
+        col_badge, col_add, col_reset, _ = st.columns([2.2, 2.2, 1.5, 3.1])
+        with col_badge:
+            st.markdown(
+                f"<div class='count-badge'>👀 確認回数：{current_count} 回</div>",
+                unsafe_allow_html=True,
+            )
+        with col_add:
+            if st.button("✅ 確認完了（+1回）", key=f"add_{proc_id}", use_container_width=True):
+                st.session_state.review_counts[proc_id] += 1
+                sync_counts_to_url(st.session_state.review_counts)
+                st.rerun()
+        with col_reset:
+            if st.button("🔄 0回に戻す", key=f"reset_{proc_id}", use_container_width=True):
+                st.session_state.review_counts[proc_id] = 0
+                sync_counts_to_url(st.session_state.review_counts)
+                st.rerun()
+
+        st.write("")
+
+        if memorize_mode:
+            st.warning("🙈 **暗記モード中**：黄色く隠された部分にカーソルを合わせる（スマホはタップする）と答えが表示されます。")
+        if search_query.strip():
+            st.info(f"🔍 検索キーワード：「**{search_query.strip()}**」で絞り込み中")
+
+        col1, col2 = st.columns([3, 2])
+        with col1:
+            st.subheader("🎯 目的")
+            st.write(current_proc["purpose"])
+        with col2:
+            st.subheader("🧰 必要物品")
+            st.write("・" + " ・".join(current_proc["items"]))
+
+        st.markdown("---")
+        st.subheader("📝 手順と重要ポイント")
+        st.caption(
+            "※ 左のチェックボックスを入れると、その手順に水色マーカーが引かれます（重要な黄色マーカーはそのまま残ります）。"
+        )
+
+        for idx, step_data in enumerate(current_proc["steps"]):
+            col_chk, col_body = st.columns([0.05, 0.95])
+            with col_chk:
+                is_checked = st.checkbox(
+                    "マーカー",
+                    key=f"{proc_id}_step_{idx}",
+                    label_visibility="collapsed",
+                )
+            with col_body:
+                st.markdown(f"**{step_data['step']}**")
+                action_html = (
+                    f"<span class='user-marker'>{step_data['action']}</span>"
+                    if is_checked
+                    else step_data["action"]
+                )
+                st.markdown(action_html, unsafe_allow_html=True)
+                st.markdown(
+                    f"<div class='point-box'>💡 <strong>根拠・留意点：</strong>{step_data['rationale']}</div>",
+                    unsafe_allow_html=True,
+                )
+
+# === タブ2：確認回数グラフ ===
+with tab_chart:
+    st.title("📊 基礎看護技術 確認回数グラフ")
+    st.caption("どの技術を何回確認したかを一覧で比較できます。確認回数が0回の技術を優先して復習しましょう。")
+
+    total_procs = len(NURSING_PROCEDURES)
+    reviewed_procs = sum(1 for count in st.session_state.review_counts.values() if count > 0)
+    unreviewed_count = total_procs - reviewed_procs
+
+    m1, m2 = st.columns(2)
+    m1.metric("確認済みの技術", f"{reviewed_procs} / {total_procs} 手技")
+    m2.metric("未確認の技術", f"{unreviewed_count} 手技")
+
+    st.markdown("---")
+
+    chart_records = []
+    for p in NURSING_PROCEDURES:
+        chart_records.append(
+            {
+                "カテゴリー": p["category"],
+                "手技名": p["title"],
+                "確認回数": st.session_state.review_counts[p["id"]],
+            }
+        )
+    df_chart = pd.DataFrame(chart_records)
+
+    st.subheader("📋 手技別の確認回数")
+    st.bar_chart(
+        df_chart.set_index("手技名")["確認回数"],
+        horizontal=True,
+        color="#fbc02d",
+    )
+
+    st.markdown("---")
+    st.subheader("📂 カテゴリー別の確認回数")
+    df_cat = df_chart.groupby("カテゴリー", as_index=True)["確認回数"].sum()
+    st.bar_chart(df_cat, horizontal=True, color="#42a5f5")
+
+    with st.expander("🔢 数値一覧テーブルを表示"):
+        st.dataframe(df_chart, use_container_width=True, hide_index=True)
+
+st.markdown("---")
+st.caption("※ 本アプリの記載内容は一般的な基礎看護教育の標準手順をもとに作成したサンプルです。実際の臨地実習や臨床現場では、各施設・教育機関の最新プロトコルに従ってください。")
